@@ -8,18 +8,6 @@ public class TicketTest {
 
 
     @ParameterizedTest
-    @ValueSource(floats = {0f,0.1f,199.9f,200f})
-    public void CalculateValidTicketPriceTest_byDist(float dist){
-        int[] ages = new int[]{0,1,Integer.MAX_VALUE-1, Integer.MAX_VALUE};
-        Ticket ticket = new Ticket();
-
-        for (int age:ages){
-            ticket.calculateTicketPrice(dist,age);
-        }
-
-    }
-
-    @ParameterizedTest
     @ValueSource(floats = {-0.1f,200.1f})
     public void CalculateInvalidTicketPriceTest_byDist(float dist){
         int[] ages = new int[]{0,1,Integer.MAX_VALUE-1, Integer.MAX_VALUE};
@@ -69,6 +57,59 @@ public class TicketTest {
     public void Q3_Invalid(){
         Ticket ticket = new Ticket();
         Assertions.assertNotEquals(15f,ticket.calculateTicketPrice(100f,21));
-        Assertions.assertThrows(IllegalArgumentException.class,() -> ticket.calculateTicketPrice(200.1f,21));    }
+        Assertions.assertThrows(IllegalArgumentException.class,() -> ticket.calculateTicketPrice(200.1f,21));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1,151})
+    public void TestAgeDiscountInvalid(int age){
+        Ticket ticket = new Ticket();
+        Assertions.assertThrows(IllegalArgumentException.class,() -> ticket.calculateAgeDiscount(age));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0,1,13,14})
+    public void TestAgeDiscountQ1(int age){
+        Ticket ticket = new Ticket();
+        Assertions.assertEquals(0,ticket.calculateAgeDiscount(age));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {15})
+    public void TestAgeDiscountQ1_invalid(int age){
+        Ticket ticket = new Ticket();
+        Assertions.assertNotEquals(0,ticket.calculateAgeDiscount(age));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {15,16,17,65,149})
+    public void TestAgeDiscountQ2_valid(int age){
+        Ticket ticket = new Ticket();
+        Assertions.assertEquals(0.5f,ticket.calculateAgeDiscount(age));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {14,19,64})
+    public void TestAgeDiscountQ2_invalid(int age){
+        Ticket ticket = new Ticket();
+        Assertions.assertNotEquals(0.5f,ticket.calculateAgeDiscount(age));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {18,19,63,64})
+    public void TestAgeDiscountQ3_valid(int age){
+        Ticket ticket = new Ticket();
+        Assertions.assertEquals(1f,ticket.calculateAgeDiscount(age));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {17,65})
+    public void TestAgeDiscountQ3_invalid(int age){
+        Ticket ticket = new Ticket();
+        Assertions.assertNotEquals(1f,ticket.calculateAgeDiscount(age));
+    }
+
+
+
 
 }
